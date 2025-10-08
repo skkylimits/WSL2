@@ -291,6 +291,14 @@ sudo docker run hello-world
 sudo usermod -aG docker $USER
 ```
 
+```
+sudo usermod -aG docker $(whoami)
+```
+
 remember to close temrinal and restart for efect to take place
+
+```
+newgrp docker || exec bash
+```
 
 ** manually -> run `docker login`
