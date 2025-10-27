@@ -33,13 +33,6 @@ curl -o ~/.bashrc https://raw.githubusercontent.com/skkylimits/.bashrc/main/.bas
 # =============================================================
 #  Flag
 # =============================================================
-curl -o ~/.bashrc https://raw.githubusercontent.com/skkylimits/.bashrc/main/.bashrc && curl -o ~/.bash_aliases https://raw.githubusercontent.com/skkylimits/.bashrc/main/.bash_aliases && curl -o ~/.bash_logout https://raw.githubusercontent.com/skkylimits/.bashrc/main/.bash_logout && echo "Settings downloaded! Restart your terminal or source ~/.bashrc" &&
-
-exec bash
-
-# =============================================================
-#  Flag
-# =============================================================
 if [ ! -f ~/.sudo_as_admin_successful ]; then
     touch ~/.sudo_as_admin_successful
     echo "[#] sudo_as_admin_successful aangemaakt."
