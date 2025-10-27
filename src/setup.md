@@ -12,13 +12,20 @@ sudo apt update && sudo apt upgrade
 > Back up your own settings if necessary before running this command. 
 
 ```bash
-curl -o ~/.bashrc https://raw.githubusercontent.com/skkylimits/.bashrc/main/.bashrc && curl -o ~/.bash_aliases https://raw.githubusercontent.com/skkylimits/.bashrc/main/.bash_aliases && curl -o ~/.bash_logout https://raw.githubusercontent.com/skkylimits/.bashrc/main/.bash_logout && echo "Settings downloaded! Restart your terminal or source ~/.bashrc"
+curl -o ~/.bashrc https://raw.githubusercontent.com/skkylimits/.bashrc/main/.bashrc && curl -o ~/.bash_aliases https://raw.githubusercontent.com/skkylimits/.bashrc/main/.bash_aliases && curl -o ~/.bash_logout https://raw.githubusercontent.com/skkylimits/.bashrc/main/.bash_logout && echo "Settings downloaded! Restart your terminal or source ~/.bashrc" &&
+
+exec bash
 ```
 
 ## remove sudo man message
 
 ```
-touch ~/.sudo_as_admin_successful
+if [ ! -f ~/.sudo_as_admin_successful ]; then
+    touch ~/.sudo_as_admin_successful
+    echo "✅ sudo_as_admin_successful aangemaakt."
+else
+    echo "ℹ️  sudo_as_admin_successful bestaat al, overslaan."
+fi
 ```
 
 ## cmatrix

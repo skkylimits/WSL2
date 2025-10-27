@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+set -euo pipefail #Maak Bash streng: stop bij fouten, typfouten, of mislukte pipes.
+
+# =============================================================
+#  setup_tools.sh
+#  Author : skkylimits
+#  Purpose: Install baseline tools (APT, pip, go, cargo, npm, git)
+# =============================================================
+
+START_TIME=$(date +%s)
+HOSTNAME=$(hostname)
+TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
+
+# -------------------------------------------------------------
+# Header
+# -------------------------------------------------------------
+echo "[>] ------------------------------------------------------------"
+echo "[>]  Starting setup_tools.sh run"
+echo "[>]  Timestamp : $TIMESTAMP"
+echo "[>]  Host      : $HOSTNAME"
+echo "[>] ------------------------------------------------------------"
+
+# -----------------------
+# Config – add your tools here
+# -----------------------
+APT_PACKAGES=(cmatrix htop curl git)
+
+# =============================================================
+#  APT
+# =============================================================
+echo "[i] Updating apt cache..."
+sudo apt-get update -y >/dev/null 2>&1 || echo "[!] apt update failed (continuing)"
+
+for pkg in "${APT_PACKAGES[@]}"; do
+  if dpkg -s "$pkg" >/dev/null 2>&1; then
+    echo "[#] $pkg already installed."
+  else
+    echo "[!] Installing $pkg..."
+    if sudo DEBIAN_FRONTEND=noninteractive apt-get install -y "$pkg" >/dev/null 2>&1; then
+      echo "[#] $pkg installed."
+    else
+      echo "[x] Failed to install $pkg"
+    fi
+  fi
+done
+
+# -------------------------------------------------------------
+# Footer
+# -------------------------------------------------------------
+END_TIME=$(date +%s)
+DURATION=$((END_TIME - START_TIME))
+END_TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
+
+echo
+echo "[>] ------------------------------------------------------------"
+echo "[>]  setup_tools.sh run finished"
+echo "[>]  Duration  : $(printf '%02d:%02d' $((DURATION/60)) $((DURATION%60)))"
+echo "[>]  Finished  : $END_TIMESTAMP"
+echo "[>] ------------------------------------------------------------"
