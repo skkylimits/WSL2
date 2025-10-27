@@ -22,41 +22,12 @@ exec bash
 ```
 if [ ! -f ~/.sudo_as_admin_successful ]; then
     touch ~/.sudo_as_admin_successful
-    echo "✅ sudo_as_admin_successful aangemaakt."
+    echo "[#] sudo_as_admin_successful aangemaakt."
 else
-    echo "ℹ️  sudo_as_admin_successful bestaat al, overslaan."
+    echo "[i]  sudo_as_admin_successful bestaat al, overslaan."
 fi
 ```
 
-### cmatrix
-
-```
-sudo apt install -y cmatrix
-```
-
-### WGET
-
-```
-sudo apt install -y wget
-```
-
-### curl
-
-```
-sudo apt install -y curl
-```
-
-### jq
-
-```
-sudo apt install -y jq
-```
-
-### git
-
-```
-sudo apt install git
-```
 
 ## nvm
 

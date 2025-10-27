@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail #Maak Bash streng: stop bij fouten, typfouten, of mislukte pipes.
 
+# chmod +x run.sh
+
 # =============================================================
 #  setup_tools.sh
 #  Author : skkylimits
@@ -20,10 +22,21 @@ echo "[>]  Timestamp : $TIMESTAMP"
 echo "[>]  Host      : $HOSTNAME"
 echo "[>] ------------------------------------------------------------"
 
+# =============================================================
+#  Flag
+# =============================================================
+if [ ! -f ~/.sudo_as_admin_successful ]; then
+    touch ~/.sudo_as_admin_successful
+    echo "[#] sudo_as_admin_successful aangemaakt."
+else
+    echo "[i]  sudo_as_admin_successful bestaat al, overslaan."
+fi
+
 # -----------------------
 # Config – add your tools here
 # -----------------------
-APT_PACKAGES=(cmatrix htop curl git)
+APT_PACKAGES=(cmatrix htop curl git wget jq)
+
 
 # =============================================================
 #  APT
