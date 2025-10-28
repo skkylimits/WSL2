@@ -45,12 +45,14 @@ fi
 # -----------------------
 # Config – add your tools here
 # -----------------------
-APT_PACKAGES=(cmatrix htop curl git wget jq nmap net-tools)
+APT_PACKAGES=(cmatrix htop curl git wget jq nmap net-tools pipx)
 CURL_INSTALLERS=(
   "nvm::curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash"
   "pnpm::bash -c 'curl -fsSL https://get.pnpm.io/install.sh | sh - && sh - && sed -i \"/# pnpm/,/# pnpm end/d\" ~/.bashrc && sed -i \"/^$/d;\${/^$/d;}\" ~/.bashrc'"
   "pyenv::curl -fsSL https://pyenv.run | bash"
 )
+PIP_PACKAGES=(pipenv requests pipx)
+
 
 # =============================================================
 #  BUILD DEPENDENCIES (per tool)
@@ -188,6 +190,61 @@ PYTHON_PATH=$(which python || true)
 PYTHON_VER=$(python --version 2>/dev/null || echo "unknown")
 echo "[#] Python binary : $PYTHON_PATH"
 echo "[#] Python version: $PYTHON_VER"
+echo "[!] Never remove default python. WSL depends on this package"
+
+echo
+echo "-------------------------------------------------------------"
+echo "[i] Python version management tips:"
+echo "-------------------------------------------------------------"
+echo "[#] Use the following commands to switch Python versions:"
+echo "[i]   pyenv shell <version>   → use version for current shell"
+echo "[i]   pyenv local <version>   → use version for current folder"
+echo "[i]   pyenv global <version>  → set version as global default"
+echo
+echo "[#] Example:"
+echo "[i]   pyenv shell 3.12.6"
+echo "[i]   pyenv global 3.12.6"
+echo "[i]   python --version"
+echo "[i]   which python"
+echo "-------------------------------------------------------------"
+
+# =============================================================
+#  PIP PACKAGE INSTALLATION
+# =============================================================
+echo
+echo "============================================================="
+echo "[>] PIP PACKAGE INSTALLATION"
+echo "============================================================="
+
+# Zorg dat pip beschikbaar is
+if ! command -v pip3 >/dev/null 2>&1; then
+  echo "[!] pip3 not found, installing via apt..."
+  sudo apt-get update -y >/dev/null 2>&1
+  sudo apt-get install -y python3-pip >/dev/null 2>&1 \
+    && echo "[#] pip3 installed." \
+    || echo "[x] Failed to install pip3."
+fi
+
+for pkg in "${PIP_PACKAGES[@]}"; do
+  if pip3 show "$pkg" >/dev/null 2>&1; then
+    echo "[#] pip: $pkg already installed."
+  else
+    echo "[!] Installing pip package: $pkg..."
+    if pip3 install --user "$pkg" >/dev/null 2>&1; then
+      echo "[#] pip: $pkg installed."
+    else
+      echo "[x] pip: Failed to install $pkg."
+    fi
+  fi
+done
+
+echo
+echo "-------------------------------------------------------------"
+echo "[i] Listing all globally installed Python packages:"
+echo "-------------------------------------------------------------"
+pip3 freeze || echo "[!] Failed to list pip packages."
+echo "-------------------------------------------------------------"
+
 
 # =============================================================
 #  Docker
