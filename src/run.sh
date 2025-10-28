@@ -154,6 +154,42 @@ else
 fi
 
 # =============================================================
+#  PYTHON LTS INSTALLATION (via pyenv)
+# =============================================================
+PYTHON_LTS_VERSION="3.12.6"
+
+# Reload shell environment to get pyenv in PATH
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
+if pyenv versions --bare | grep -q "^${PYTHON_LTS_VERSION}$"; then
+  echo "[#] Python ${PYTHON_LTS_VERSION} already installed."
+else
+  echo "[i] Installing Python ${PYTHON_LTS_VERSION}..."
+  if pyenv install "${PYTHON_LTS_VERSION}" >/dev/null 2>&1; then
+    echo "[#] Python ${PYTHON_LTS_VERSION} installed successfully."
+  else
+    echo "[x] Failed to install Python ${PYTHON_LTS_VERSION}."
+  fi
+fi
+
+# Set as global default
+echo "[i] Setting Python ${PYTHON_LTS_VERSION} as global version..."
+if pyenv global "${PYTHON_LTS_VERSION}" >/dev/null 2>&1; then
+  echo "[#] Python ${PYTHON_LTS_VERSION} set as global."
+else
+  echo "[x] Failed to set global Python version."
+fi
+
+# Verify setup
+echo "[i] Verifying Python installation..."
+PYTHON_PATH=$(which python || true)
+PYTHON_VER=$(python --version 2>/dev/null || echo "unknown")
+echo "[#] Python binary : $PYTHON_PATH"
+echo "[#] Python version: $PYTHON_VER"
+
+# =============================================================
 #  Docker
 # =============================================================
 echo
