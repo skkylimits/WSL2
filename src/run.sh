@@ -72,30 +72,27 @@ done
 # =============================================================
 #  curl
 # =============================================================
-
-local entries=("$@")
-if [ ${#entries[@]} -eq 0 ]; then
+if [ ${#CURL_INSTALLERS[@]} -eq 0 ]; then
   echo "[i] No curl installers defined."
-  return
+else
+  for entry in "${CURL_INSTALLERS[@]}"; do
+    # format: "command::install_url_or_script"
+    name="${entry%%::*}"
+    cmd="${entry#*::}"
+
+    if command -v "$name" >/dev/null 2>&1; then
+      echo "[#] $name already installed."
+      continue
+    fi
+
+    echo "[!] Installing $name from curl source..."
+    if eval "$cmd" >/dev/null 2>&1; then
+      echo "[#] $name installed successfully."
+    else
+      echo "[x] Failed to install $name."
+    fi
+  done
 fi
-
-for entry in "${entries[@]}"; do
-  # format: "command::install_url_or_script"
-  local name="${entry%%::*}"
-  local cmd="${entry#*::}"
-
-  if command -v "$name" >/dev/null 2>&1; then
-    echo "[#] $name already installed."
-    continue
-  fi
-
-  echo "[!] Installing $name from curl source..."
-  if echo "$cmd" | bash >/dev/null 2>&1; then
-    echo "[#] $name installed successfully."
-  else
-    echo "[x] Failed to install $name."
-  fi
-done
 
 
 # -------------------------------------------------------------
