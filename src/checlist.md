@@ -1,74 +1,30 @@
 # WSL INSTALLABLES
 
-We recommend that you regularly update and upgrade your packages using the preferred package manager for the distribution. For Ubuntu or Debian, use the command:
+###############################################
+#              MAIN INSTALLABLES              #
+###############################################
+: '
+jq
+git
+nvm
+docker
+'
 
-```
-sudo apt update && sudo apt upgrade
-```
+###############################################
+#               MISC INSTALLABLES             #
+###############################################
+: '
+cmatrix
+'
 
-## .bashrc
+###############################################
+#             SECURITY INSTALLABLES           #
+###############################################
+: '
+net-tools
+nmap
+'
 
-> [!CAUTION]
-> Back up your own settings if necessary before running this command. 
-
-```bash
-curl -o ~/.bashrc https://raw.githubusercontent.com/skkylimits/.bashrc/main/.bashrc && curl -o ~/.bash_aliases https://raw.githubusercontent.com/skkylimits/.bashrc/main/.bash_aliases && curl -o ~/.bash_logout https://raw.githubusercontent.com/skkylimits/.bashrc/main/.bash_logout && echo "Settings downloaded! Restart your terminal or source ~/.bashrc" &&
-
-exec bash
-```
-
-## remove sudo man message
-
-```
-if [ ! -f ~/.sudo_as_admin_successful ]; then
-    touch ~/.sudo_as_admin_successful
-    echo "[#] sudo_as_admin_successful aangemaakt."
-else
-    echo "[i]  sudo_as_admin_successful bestaat al, overslaan."
-fi
-```
-
-
-## nvm
-
-https://github.com/nvm-sh/nvm
-
-```
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
-
-```
-
-add to ~/.bashrc
-
-```
-############################
-#                 NVM                   #
-############################
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-```
-
-verify installation
-
-```
-command -v nvm
-```
-
-install LTS
-
-```
-nvm install --lts
-```
-
-check versions
-
-```
-nvm ls
-
-node -v
-npm -v
-```
 
 ### pnpm
 

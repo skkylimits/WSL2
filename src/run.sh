@@ -45,7 +45,7 @@ fi
 # -----------------------
 # Config – add your tools here
 # -----------------------
-APT_PACKAGES=(cmatrix htop curl git wget jq)
+APT_PACKAGES=(cmatrix htop curl git wget jq nmap net-tools)
 CURL_INSTALLERS=(
   "nvm::curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash"
 )
