@@ -4,7 +4,7 @@ set -euo pipefail #Maak Bash streng: stop bij fouten, typfouten, of mislukte pip
 # chmod +x run.sh
 
 # =============================================================
-#  setup_tools.sh
+#  run.sh
 #  Author : skkylimits
 #  Purpose: Install baseline tools (APT, pip, go, cargo, npm, git)
 # =============================================================
@@ -17,7 +17,7 @@ TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
 # Header
 # -------------------------------------------------------------
 echo "[>] ------------------------------------------------------------"
-echo "[>]  Starting setup_tools.sh run"
+echo "[>]  Starting run.sh run"
 echo "[>]  Timestamp : $TIMESTAMP"
 echo "[>]  Host      : $HOSTNAME"
 echo "[>] ------------------------------------------------------------"
@@ -72,31 +72,31 @@ done
 # =============================================================
 #  curl
 # =============================================================
-install_curl() {
-  local entries=("$@")
-  if [ ${#entries[@]} -eq 0 ]; then
-    echo "[i] No curl installers defined."
-    return
+
+local entries=("$@")
+if [ ${#entries[@]} -eq 0 ]; then
+  echo "[i] No curl installers defined."
+  return
+fi
+
+for entry in "${entries[@]}"; do
+  # format: "command::install_url_or_script"
+  local name="${entry%%::*}"
+  local cmd="${entry#*::}"
+
+  if command -v "$name" >/dev/null 2>&1; then
+    echo "[#] $name already installed."
+    continue
   fi
 
-  for entry in "${entries[@]}"; do
-    # format: "command::install_url_or_script"
-    local name="${entry%%::*}"
-    local cmd="${entry#*::}"
+  echo "[!] Installing $name from curl source..."
+  if echo "$cmd" | bash >/dev/null 2>&1; then
+    echo "[#] $name installed successfully."
+  else
+    echo "[x] Failed to install $name."
+  fi
+done
 
-    if command -v "$name" >/dev/null 2>&1; then
-      echo "[#] $name already installed."
-      continue
-    fi
-
-    echo "[!] Installing $name from curl source..."
-    if echo "$cmd" | bash >/dev/null 2>&1; then
-      echo "[#] $name installed successfully."
-    else
-      echo "[x] Failed to install $name."
-    fi
-  done
-}
 
 # -------------------------------------------------------------
 # Footer
@@ -107,7 +107,7 @@ END_TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
 
 echo
 echo "[>] ------------------------------------------------------------"
-echo "[>]  setup_tools.sh run finished"
+echo "[>]  run.sh run finished"
 echo "[>]  Duration  : $(printf '%02d:%02d' $((DURATION/60)) $((DURATION%60)))"
 echo "[>]  Finished  : $END_TIMESTAMP"
 echo "[>] ------------------------------------------------------------"
