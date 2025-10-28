@@ -1,30 +1,17 @@
 # WSL INSTALLABLES
 
-###############################################
-#              MAIN INSTALLABLES              #
-###############################################
-: '
-jq
-git
-nvm
+
 docker
-'
 
-###############################################
-#               MISC INSTALLABLES             #
-###############################################
-: '
-cmatrix
-'
 
-###############################################
-#             SECURITY INSTALLABLES           #
-###############################################
-: '
-net-tools
-nmap
-'
 
+⚙️ Tegenhanger in moderne Linux-systemen
+
+ifconfig	ip addr	netwerkinterfaces
+netstat -tulnp	ss -tulnp	sockets en poorten
+route -n	ip route show	routing-tabellen
+arp -a	ip neigh show	ARP-entries
+hostname	hostnamectl	systeeminfo
 
 ### pnpm
 

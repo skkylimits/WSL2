@@ -104,6 +104,60 @@ else
   done
 fi
 
+# =============================================================
+#  Docker
+# =============================================================
+echo
+echo "============================================================="
+echo "[>] DOCKER INSTALLATION"
+echo "============================================================="
+
+if command -v docker >/dev/null 2>&1; then
+  echo "[#] Docker already installed."
+  return
+fi
+
+echo "[i] Setting up Docker apt repository..."
+sudo apt-get update -y >/dev/null 2>&1
+sudo apt-get install -y ca-certificates curl gnupg >/dev/null 2>&1
+
+sudo install -m 0755 -d /etc/apt/keyrings >/dev/null 2>&1
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+echo "[i] Adding Docker repository..."
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] \
+  https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" \
+  | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
+
+sudo apt-get update -y >/dev/null 2>&1
+
+echo "[i] Installing Docker Engine packages..."
+if sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin >/dev/null 2>&1; then
+  echo "[#] Docker packages installed."
+else
+  echo "[x] Failed to install Docker packages."
+  return 1
+fi
+
+echo "[i] Adding current user to docker group..."
+if sudo usermod -aG docker "$USER"; then
+  echo "[#] User '$USER' added to docker group."
+else
+  echo "[x] Failed to add user to docker group."
+fi
+
+echo "[i] Verifying Docker installation..."
+if sudo docker run --rm hello-world >/dev/null 2>&1; then
+  echo "[#] Docker installation verified successfully."
+else
+  echo "[!] Docker verification failed or hello-world image could not run."
+fi
+
+echo "[i] Applying new group membership..."
+newgrp docker || exec bash
 
 # -------------------------------------------------------------
 # Footer
