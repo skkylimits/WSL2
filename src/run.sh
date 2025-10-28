@@ -39,14 +39,16 @@ if [ ! -f ~/.sudo_as_admin_successful ]; then
     touch ~/.sudo_as_admin_successful
     echo "[#] sudo_as_admin_successful aangemaakt."
 else
-    echo "[i]  sudo_as_admin_successful bestaat al, overslaan."
+    echo "[i] sudo_as_admin_successful bestaat al, overslaan."
 fi
 
 # -----------------------
 # Config – add your tools here
 # -----------------------
 APT_PACKAGES=(cmatrix htop curl git wget jq)
-
+CURL_INSTALLERS=(
+  "nvm::curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash"
+)
 
 # =============================================================
 #  APT
@@ -66,6 +68,35 @@ for pkg in "${APT_PACKAGES[@]}"; do
     fi
   fi
 done
+
+# =============================================================
+#  curl
+# =============================================================
+install_curl() {
+  local entries=("$@")
+  if [ ${#entries[@]} -eq 0 ]; then
+    echo "[i] No curl installers defined."
+    return
+  fi
+
+  for entry in "${entries[@]}"; do
+    # format: "command::install_url_or_script"
+    local name="${entry%%::*}"
+    local cmd="${entry#*::}"
+
+    if command -v "$name" >/dev/null 2>&1; then
+      echo "[#] $name already installed."
+      continue
+    fi
+
+    echo "[!] Installing $name from curl source..."
+    if echo "$cmd" | bash >/dev/null 2>&1; then
+      echo "[#] $name installed successfully."
+    else
+      echo "[x] Failed to install $name."
+    fi
+  done
+}
 
 # -------------------------------------------------------------
 # Footer
