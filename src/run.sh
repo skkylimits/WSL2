@@ -48,6 +48,7 @@ fi
 APT_PACKAGES=(cmatrix htop curl git wget jq nmap net-tools)
 CURL_INSTALLERS=(
   "nvm::curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash"
+  "pnpm::bash -c 'curl -fsSL https://get.pnpm.io/install.sh | sh - && sh - && sed -i \"/# pnpm/,/# pnpm end/d\" ~/.bashrc && sed -i \"/^$/d;\${/^$/d;}\" ~/.bashrc'"
 )
 
 # =============================================================
@@ -157,7 +158,8 @@ else
 fi
 
 echo "[i] Applying new group membership..."
-newgrp docker || exec bash
+echo "[i] Group change will take effect after you log out or restart your shell."
+echo "[i] To apply immediately, run: newgrp docker"
 
 # -------------------------------------------------------------
 # Footer
