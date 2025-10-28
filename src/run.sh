@@ -25,6 +25,11 @@ echo "[>] ---------------------------------------------------------"
 # =============================================================
 # INIT
 # =============================================================
+echo
+echo "============================================================="
+echo "[>] INIT"
+echo "============================================================="
+
 echo "[i] Downloading shell configuration..."
 curl -fsSL -o ~/.bashrc        https://raw.githubusercontent.com/skkylimits/.bashrc/main/.bashrc
 curl -fsSL -o ~/.bash_aliases  https://raw.githubusercontent.com/skkylimits/.bashrc/main/.bash_aliases
@@ -52,6 +57,8 @@ CURL_INSTALLERS=(
   "pyenv::curl -fsSL https://pyenv.run | bash"
 )
 PIP_PACKAGES=(pipenv requests pipx)
+PNPM_PACKAGES=(@google/gemini-cli @anthropic-ai/claude-cli @openai/codex-cli
+)
 
 
 # =============================================================
@@ -245,6 +252,34 @@ echo "-------------------------------------------------------------"
 pip3 freeze || echo "[!] Failed to list pip packages."
 echo "-------------------------------------------------------------"
 
+# =============================================================
+#  PNPM PACKAGE INSTALLATION
+# =============================================================
+echo
+echo "============================================================="
+echo "[>] PNPM PACKAGE INSTALLATION"
+echo "============================================================="
+
+# Reload shell environment to get pnpm in PATH
+export PNPM_HOME="/home/skkylimits/.local/share/pnpm"
+export PATH="$PNPM_HOME:$PATH"
+
+if ! command -v pnpm >/dev/null 2>&1; then
+  echo "[!] pnpm not found, skipping pnpm package installation."
+else
+  for pkg in "${PNPM_PACKAGES[@]}"; do
+    if pnpm list -g | grep -q "$pkg"; then
+      echo "[#] pnpm: $pkg already installed."
+    else
+      echo "[!] Installing pnpm package: $pkg..."
+      if pnpm install -g "$pkg" >/dev/null 2>&1; then
+        echo "[#] pnpm: $pkg installed."
+      else
+        echo "[x] pnpm: Failed to install $pkg."
+      fi
+    fi
+  done
+fi
 
 # =============================================================
 #  Docker

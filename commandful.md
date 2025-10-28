@@ -1,5 +1,6 @@
 # Commandful 
 
+Set-VMProcessor -VMName "VM-SP3-SO-0929-5817" -ExposeVirtualizationExtensions $true
 
 > drag and drop file/folder to paste path
 
