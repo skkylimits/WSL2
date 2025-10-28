@@ -1,27 +1,6 @@
-# WSL INSTALLABLES
-
-
-docker
 
 
 
-⚙️ Tegenhanger in moderne Linux-systemen
-
-ifconfig	ip addr	netwerkinterfaces
-netstat -tulnp	ss -tulnp	sockets en poorten
-route -n	ip route show	routing-tabellen
-arp -a	ip neigh show	ARP-entries
-hostname	hostnamectl	systeeminfo
-
-### pnpm
-
-https://pnpm.io/installation
-
-Install pnpm and removes the appended code done automatically by pnpm since we already have that in our .bashrc
-```sh
-curl -fsSL https://get.pnpm.io/install.sh | sh - && sh - && sed -i '/# pnpm/,/# pnpm end/d' ~/.bashrc && sed -i '/^$/d;${/^$/d;}' ~/.bashrc
-
-```
 
 ## pyenv
 

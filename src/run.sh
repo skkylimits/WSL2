@@ -49,7 +49,52 @@ APT_PACKAGES=(cmatrix htop curl git wget jq nmap net-tools)
 CURL_INSTALLERS=(
   "nvm::curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash"
   "pnpm::bash -c 'curl -fsSL https://get.pnpm.io/install.sh | sh - && sh - && sed -i \"/# pnpm/,/# pnpm end/d\" ~/.bashrc && sed -i \"/^$/d;\${/^$/d;}\" ~/.bashrc'"
+  "pyenv::curl -fsSL https://pyenv.run | bash"
 )
+
+# =============================================================
+#  BUILD DEPENDENCIES (per tool)
+# =============================================================
+CURL_DEPENDENCIES=(
+  "pyenv::build-essential libssl-dev zlib1g-dev libbz2-dev \
+   libreadline-dev libsqlite3-dev libncursesw5-dev xz-utils \
+   tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev"
+)
+
+install_apt_group() {
+  local group_name="$1"
+  shift
+  local pkgs=("$@")
+
+  echo
+  echo "============================================================="
+  echo "[>] Installing $group_name dependencies"
+  echo "============================================================="
+
+  for pkg in "${pkgs[@]}"; do
+    if dpkg -s "$pkg" >/dev/null 2>&1; then
+      echo "[#] $pkg already installed."
+    else
+      echo "[!] Installing $pkg..."
+      sudo DEBIAN_FRONTEND=noninteractive apt-get install -y "$pkg" >/dev/null 2>&1 \
+        && echo "[#] $pkg installed." \
+        || echo "[x] Failed to install $pkg"
+    fi
+  done
+}
+
+install_curl_dependencies() {
+  local tool="$1"
+  for mapping in "${CURL_DEPENDENCIES[@]}"; do
+    local name="${mapping%%::*}"
+    local deps="${mapping#*::}"
+    if [[ "$name" == "$tool" ]]; then
+      echo "[i] Checking dependencies for $tool..."
+      install_apt_group "$tool" $deps
+      return
+    fi
+  done
+}
 
 # =============================================================
 #  APT
@@ -91,6 +136,9 @@ else
     name="${entry%%::*}"
     cmd="${entry#*::}"
 
+    # Dependencies first (if any)
+    install_curl_dependencies "$name"
+
     if command -v "$name" >/dev/null 2>&1; then
       echo "[#] $name already installed."
       continue
@@ -115,51 +163,49 @@ echo "============================================================="
 
 if command -v docker >/dev/null 2>&1; then
   echo "[#] Docker already installed."
-  return
-fi
-
-echo "[i] Setting up Docker apt repository..."
-sudo apt-get update -y >/dev/null 2>&1
-sudo apt-get install -y ca-certificates curl gnupg >/dev/null 2>&1
-
-sudo install -m 0755 -d /etc/apt/keyrings >/dev/null 2>&1
-sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-sudo chmod a+r /etc/apt/keyrings/docker.asc
-
-echo "[i] Adding Docker repository..."
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] \
-  https://download.docker.com/linux/ubuntu \
-  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" \
-  | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
-
-sudo apt-get update -y >/dev/null 2>&1
-
-echo "[i] Installing Docker Engine packages..."
-if sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin >/dev/null 2>&1; then
-  echo "[#] Docker packages installed."
 else
-  echo "[x] Failed to install Docker packages."
-  return 1
-fi
+  echo "[i] Setting up Docker apt repository..."
+  sudo apt-get update -y >/dev/null 2>&1
+  sudo apt-get install -y ca-certificates curl gnupg >/dev/null 2>&1
 
-echo "[i] Adding current user to docker group..."
-if sudo usermod -aG docker "$USER"; then
-  echo "[#] User '$USER' added to docker group."
-else
-  echo "[x] Failed to add user to docker group."
-fi
+  sudo install -m 0755 -d /etc/apt/keyrings >/dev/null 2>&1
+  sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+  sudo chmod a+r /etc/apt/keyrings/docker.asc
 
-echo "[i] Verifying Docker installation..."
-if sudo docker run --rm hello-world >/dev/null 2>&1; then
-  echo "[#] Docker installation verified successfully."
-else
-  echo "[!] Docker verification failed or hello-world image could not run."
-fi
+  echo "[i] Adding Docker repository..."
+  echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] \
+    https://download.docker.com/linux/ubuntu \
+    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" \
+    | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
 
-echo "[i] Applying new group membership..."
-echo "[i] Group change will take effect after you log out or restart your shell."
-echo "[i] To apply immediately, run: newgrp docker"
+  sudo apt-get update -y >/dev/null 2>&1
+
+  echo "[i] Installing Docker Engine packages..."
+  if sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin >/dev/null 2>&1; then
+    echo "[#] Docker packages installed."
+  else
+    echo "[x] Failed to install Docker packages."
+  fi
+
+  echo "[i] Adding current user to docker group..."
+  if sudo usermod -aG docker "$USER"; then
+    echo "[#] User '$USER' added to docker group."
+  else
+    echo "[x] Failed to add user to docker group."
+  fi
+
+  echo "[i] Verifying Docker installation..."
+  if sudo docker run --rm hello-world >/dev/null 2>&1; then
+    echo "[#] Docker installation verified successfully."
+  else
+    echo "[!] Docker verification failed or hello-world image could not run."
+  fi
+
+  echo "[i] Applying new group membership..."
+  echo "[i] Group change will take effect after you log out or restart your shell."
+  echo "[i] To apply immediately, run: newgrp docker"
+fi
 
 # -------------------------------------------------------------
 # Footer

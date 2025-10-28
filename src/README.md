@@ -2,6 +2,14 @@
 
 Read more about WSl https://learn.microsoft.com/en-us/windows/wsl/install
 
+⚙️ Tegenhanger in moderne Linux-systemen
+
+ifconfig	ip addr	netwerkinterfaces
+netstat -tulnp	ss -tulnp	sockets en poorten
+route -n	ip route show	routing-tabellen
+arp -a	ip neigh show	ARP-entries
+hostname	hostnamectl	systeeminfo
+
 ## Pre-requisites
 
 ### Enable Virtualization
