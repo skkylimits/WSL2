@@ -160,7 +160,3 @@ Zo blijft je `[i] [!] [#]`-stijl uniform voor **alle install-types**.
 > Juist, de `dpkg -s`-methode werkt alleen voor `apt`-tools.
 > Voor `pip`, `cargo`, `npm` of zelfgebouwde tools gebruik je een `command -v`-check of hun eigen package-manager-check.
 
-Wil je dat ik deze drie soorten checks (apt / pip / bin) in één herbruikbare logging-stijl-framework giet?
-Dan kun je in je `setup.sh` gewoon zeggen:
-`install_tool apt git` of `install_tool pip pwntools` — alles met dezelfde `[i] [!] [#]`-uitvoer.
-ja 

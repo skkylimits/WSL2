@@ -1,0 +1,15 @@
+# act configuration voor lokale GitHub Actions testing
+# Gebruik: act [event] [options]
+
+# Gebruik grotere container (heeft meer tools)
+-P ubuntu-latest=catthehacker/ubuntu:act-latest
+
+# Enable Docker buildx caching
+--use-gitignore=false
+
+# Bind cache directories (blijven bestaan tussen runs!)
+--bind
+
+# Container options voor betere performance
+# Note: Volumes worden automatisch beheerd door GitHub Actions cache
+# Voor lokale testing werkt act zonder expliciete volume mounts

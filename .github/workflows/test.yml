@@ -1,0 +1,120 @@
+name: Test WSL2 Setup
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test-setup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # APT Cache - Dit scheelt 3-4 minuten per run!
+      - name: Cache APT packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            /var/cache/apt/archives/*.deb
+            /var/lib/apt/lists/*
+          key: apt-cache-${{ runner.os }}-${{ hashFiles('src/run.sh', 'src/setup.sh') }}
+          restore-keys: |
+            apt-cache-${{ runner.os }}-
+
+      # Docker buildx cache voor Docker layer caching
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # pyenv dependencies cache
+      - name: Cache pyenv build dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.pyenv
+          key: pyenv-${{ runner.os }}-3.12.6
+          restore-keys: |
+            pyenv-${{ runner.os }}-
+
+      # nvm/Node cache
+      - name: Cache nvm and Node
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.nvm
+            ~/.npm
+          key: nvm-${{ runner.os }}-lts
+          restore-keys: |
+            nvm-${{ runner.os }}-
+
+      # pnpm cache
+      - name: Cache pnpm
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/pnpm
+          key: pnpm-${{ runner.os }}
+          restore-keys: |
+            pnpm-${{ runner.os }}-
+
+      # Run setup script
+      - name: Run setup script
+        run: |
+          chmod +x src/run.sh
+          ./src/run.sh
+        env:
+          DEBIAN_FRONTEND: noninteractive
+
+      # Verify installations
+      - name: Verify installations
+        run: |
+          echo "=== Verifying installations ==="
+
+          # APT packages
+          command -v git && echo "[✓] git installed"
+          command -v curl && echo "[✓] curl installed"
+          command -v docker && echo "[✓] docker installed"
+
+          # Python
+          source ~/.bashrc
+          python --version && echo "[✓] python installed"
+
+          # Node
+          source ~/.nvm/nvm.sh
+          node --version && echo "[✓] node installed"
+          pnpm --version && echo "[✓] pnpm installed"
+
+          echo "=== All verifications passed ==="
+
+  # Separate job voor quick tests (alleen nieuwe packages testen)
+  quick-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Restore alleen APT cache
+      - name: Restore APT cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            /var/cache/apt/archives/*.deb
+            /var/lib/apt/lists/*
+          key: apt-cache-${{ runner.os }}-${{ hashFiles('src/run.sh', 'src/setup.sh') }}
+          restore-keys: |
+            apt-cache-${{ runner.os }}-
+
+      # Test alleen nieuwe packages (snel!)
+      - name: Test new package installation
+        run: |
+          # Update package list
+          sudo apt-get update -qq
+
+          # Test installatie van nieuwe package (bijv. proxychains4)
+          sudo apt-get install -y proxychains4
+
+          # Verify
+          command -v proxychains4 && echo "[✓] proxychains4 installed"

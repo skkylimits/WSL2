@@ -1,0 +1,76 @@
+{
+  "name": "wsl2-setup",
+  "version": "0.5.0",
+  "description": "WSL2 development environment setup with cached testing",
+  "private": true,
+  "scripts": {
+    "test": "pnpm run test:quick",
+    "test:quick": "./test-local.sh apt-packages quick",
+    "test:full": "./test-local.sh final",
+    "test:docker": "./test-local.sh",
+    "test:python": "./test-local.sh python-install",
+    "test:node": "./test-local.sh node-install",
+
+    "act": "pnpm run act:quick",
+    "act:quick": "./test-with-act.sh quick",
+    "act:full": "./test-with-act.sh full",
+    "act:list": "./test-with-act.sh list",
+    "act:ci": "act -j test-setup",
+
+    "build": "docker build --target final -t wsl2-setup:latest .",
+    "build:quick": "docker build --target apt-packages -t wsl2-setup:apt-cache .",
+    "build:cache": "docker build --target final --cache-from wsl2-setup:cache -t wsl2-setup:latest -t wsl2-setup:cache .",
+
+    "run": "docker run -it --rm wsl2-setup:latest bash",
+    "run:mount": "docker run -it --rm -v $(pwd):/workspace wsl2-setup:latest bash",
+
+    "lint": "pnpm run lint:shell",
+    "lint:shell": "shellcheck src/*.sh test-*.sh || echo 'Install shellcheck: sudo apt install shellcheck'",
+    "lint:fix": "echo 'Shell scripts need manual fixes after linting'",
+    "lint:docker": "docker run --rm -i hadolint/hadolint < Dockerfile || echo 'Hadolint check complete'",
+
+    "clean": "pnpm run clean:docker",
+    "clean:docker": "docker system prune -f",
+    "clean:cache": "docker builder prune -f && echo 'Docker build cache cleared'",
+    "clean:volumes": "docker volume rm act-apt-cache act-pyenv-cache act-nvm-cache act-pnpm-cache 2>/dev/null || true",
+    "clean:all": "pnpm run clean:docker && pnpm run clean:cache && pnpm run clean:volumes",
+
+    "dev": "pnpm run test:quick",
+    "dev:watch": "echo 'Use: watch -n 2 pnpm run test:quick' && watch -n 2 pnpm run test:quick",
+
+    "setup": "chmod +x src/run.sh src/setup.sh test-local.sh test-with-act.sh",
+    "setup:local": "./src/run.sh",
+
+    "docker:logs": "docker ps -a && docker logs $(docker ps -lq)",
+    "docker:stats": "docker system df",
+    "docker:images": "docker images | grep wsl2-setup",
+
+    "ci": "pnpm run act:full",
+    "ci:local": "pnpm run test:full && pnpm run act:full",
+
+    "help": "node -e \"const pkg = require('./package.json'); Object.entries(pkg.scripts).forEach(([name, cmd]) => console.log('pnpm run ' + name.padEnd(20) + ' # ' + cmd));\""
+  },
+  "devDependencies": {
+    "shellcheck": "^1.1.0"
+  },
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=8"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/skkylimits/WSL2.git"
+  },
+  "keywords": [
+    "wsl2",
+    "ubuntu",
+    "setup",
+    "docker",
+    "python",
+    "nodejs",
+    "automation",
+    "ci-cd"
+  ],
+  "author": "skkylimits",
+  "license": "MIT"
+}

@@ -21,8 +21,9 @@ This repository contains production-ready scripts for transforming a fresh WSL2 
 git clone https://github.com/skkylimits/WSL2.git
 cd WSL2
 
-# Make the script executable
-chmod +x src/run.sh
+# Install pnpm dependencies and setup
+pnpm install
+pnpm run setup
 
 # Run the automated setup
 ./src/run.sh
@@ -42,6 +43,64 @@ docker --version
 python --version
 node --version
 ```
+
+---
+
+## Development Scripts (pnpm)
+
+All test and development commands are available via `pnpm run`:
+
+### Testing (Quick Iteration)
+```bash
+pnpm test              # Quick test (10 seconds with cache!)
+pnpm run test:quick    # Same as above
+pnpm run test:full     # Full Docker test (~50 seconds)
+pnpm run test:python   # Test up to Python stage
+pnpm run test:node     # Test up to Node stage
+```
+
+### GitHub Actions (Local CI)
+```bash
+pnpm run act           # Quick CI test (~30 seconds)
+pnpm run act:quick     # Same as above
+pnpm run act:full      # Full CI simulation (~2 minutes)
+pnpm run act:list      # List all available jobs
+pnpm run act:ci        # Run specific test-setup job
+```
+
+### Docker Management
+```bash
+pnpm run build         # Build full image
+pnpm run build:quick   # Build only APT packages (fast!)
+pnpm run build:cache   # Build with cache optimization
+pnpm run run           # Run container interactively
+pnpm run run:mount     # Run with workspace mounted
+```
+
+### Linting
+```bash
+pnpm run lint          # Lint all shell scripts
+pnpm run lint:shell    # Lint bash scripts with shellcheck
+pnpm run lint:docker   # Lint Dockerfile with hadolint
+pnpm run lint:fix      # Show lint fix suggestions
+```
+
+### Cleanup
+```bash
+pnpm run clean         # Clean Docker system
+pnpm run clean:cache   # Clear Docker build cache
+pnpm run clean:volumes # Remove act cache volumes
+pnpm run clean:all     # Nuclear option (all caches)
+```
+
+### Utilities
+```bash
+pnpm run docker:stats  # Show Docker disk usage
+pnpm run docker:images # List WSL2 setup images
+pnpm run help          # List all available commands
+```
+
+**Pro tip:** Use `pnpm test` for 90% of your development. It's cached and takes only ~10 seconds!
 
 ---
 
@@ -215,13 +274,64 @@ All context files are synchronized and contain identical content for cross-AI co
 
 ---
 
-## Common Commands
+## Useful Commands Reference
 
-See [`commandful.md`](./commandful.md) for a comprehensive CLI reference including:
-- Network diagnostics (`netstat`, port scanning)
-- Process management (`pidof`, `kill`, `killall`)
-- Node.js cleanup (`npx npkill`)
-- Sudo shortcuts (`sudo!!`)
+### Network & Ports
+
+**Check port services:**
+```bash
+cat /etc/services
+grep -w '80/tcp' /etc/services
+grep -w '443/tcp' /etc/services
+grep -E -w '22/(tcp|udp)' /etc/services
+```
+
+**List open ports:**
+```bash
+netstat -tulpn
+sudo netstat -tulpn | grep LISTEN
+```
+
+### Process Management
+
+**Find process ID:**
+```bash
+pidof appname
+```
+
+**Kill process by PID:**
+```bash
+kill -9 <pid>
+```
+
+**Kill process by name:**
+```bash
+killall -9 appname
+```
+
+### Node.js Development
+
+**Remove all node_modules recursively (interactive):**
+```bash
+npx npkill
+```
+
+### Shell Shortcuts
+
+**Run last command with sudo:**
+```bash
+sudo!!
+```
+
+**Drag and drop file/folder to paste path:**
+Simply drag a file or folder into your terminal to paste its full path.
+
+### Docker (WSL2/VM)
+
+**Enable nested virtualization (PowerShell as Admin on Windows host):**
+```powershell
+Set-VMProcessor -VMName "YOUR-VM-NAME" -ExposeVirtualizationExtensions $true
+```
 
 ---
 

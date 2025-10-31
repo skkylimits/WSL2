@@ -1,0 +1,22 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+*.md
+!src/**/*.md
+
+# CI/CD
+.github
+.actrc
+
+# Test scripts
+test-*.sh
+
+# Trash
+trash/
+
+# Temp files
+*.log
+*.tmp
+.DS_Store

@@ -150,7 +150,7 @@ Docker is installed **without Docker Desktop** - CLI only via Docker Engine.
 
 ## Common Commands Reference
 
-See `commandful.md` for useful CLI commands:
+See the **"Useful Commands Reference"** section in `README.md` for comprehensive CLI commands:
 
 **Network diagnostics:**
 ```bash

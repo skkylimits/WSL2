@@ -50,7 +50,7 @@ fi
 # -----------------------
 # Config – add your tools here
 # -----------------------
-APT_PACKAGES=(cmatrix htop curl git wget jq nmap net-tools pipx)
+APT_PACKAGES=(cmatrix htop curl git wget jq nmap net-tools pipx proxychains4)
 CURL_INSTALLERS=(
   "nvm::curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash"
   "pnpm::bash -c 'curl -fsSL https://get.pnpm.io/install.sh | sh - && sh - && sed -i \"/# pnpm/,/# pnpm end/d\" ~/.bashrc && sed -i \"/^$/d;\${/^$/d;}\" ~/.bashrc'"
