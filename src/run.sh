@@ -57,7 +57,7 @@ CURL_INSTALLERS=(
   "pyenv::curl -fsSL https://pyenv.run | bash"
 )
 PIP_PACKAGES=(pipenv requests pipx)
-PNPM_PACKAGES=(@google/gemini-cli @anthropic-ai/claude-cli @openai/codex-cli
+PNPM_PACKAGES=(@google/generative-ai-cli @anthropic-ai/claude-code @openai/codex@latest
 )
 
 

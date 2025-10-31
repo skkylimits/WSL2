@@ -150,7 +150,7 @@ Docker is installed **without Docker Desktop** - CLI only via Docker Engine.
 
 ## Common Commands Reference
 
-See `commandful.md` for useful CLI commands:
+See the **"Useful Commands Reference"** section in `README.md` for comprehensive CLI commands:
 
 **Network diagnostics:**
 ```bash
@@ -225,8 +225,8 @@ When using `src/setup.sh` functions:
 This repository follows the **Meta-Proof workflow** inspired by NetworkChuck's AI project management system.
 
 **Key Documentation Files:**
-- `session-summary.md` — Technical summary of current development session
-- `working-outline.md` — Project structure and component overview
+- `docs/session-summary.md` — Technical summary of current development session
+- `docs/working-outline.md` — Project structure and component overview
 - `README.md` — User-facing project documentation
 - `src/AI/HOW-TO-SUPERPOWER.md` — Meta-Proof workflow explanation
 
@@ -238,7 +238,7 @@ This repository follows the **Meta-Proof workflow** inspired by NetworkChuck's A
 **Session Workflow:**
 1. Development session with changes
 2. Run `wsl-project-update` agent at session end
-3. Agent updates: session-summary.md, working-outline.md, context files, README.md
+3. Agent updates: docs/session-summary.md, docs/working-outline.md, context files, README.md
 4. Agent creates Git commit with session summary
 5. Agent pushes to remote repository
 

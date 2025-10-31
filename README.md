@@ -261,8 +261,8 @@ pnpm install nuxi@latest && pnpx nuxi init     # Nuxt project
 This repository follows the **Meta-Proof workflow** inspired by NetworkChuck's AI project management system.
 
 **Documentation Files:**
-- `session-summary.md` — Technical summary of current development session
-- `working-outline.md` — Project structure and component overview
+- `docs/session-summary.md` — Technical summary of current development session
+- `docs/working-outline.md` — Project structure and component overview
 - `src/AI/HOW-TO-SUPERPOWER.md` — Meta-Proof workflow explanation
 
 **AI Context Files:**
