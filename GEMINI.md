@@ -1,6 +1,6 @@
 # GEMINI.md
 
-This file provides guidance to Gemini (Google's AI assistant) when working with code in this repository.
+This file provides guidance to Gemini when working with code in this repository.
 
 ## Repository Overview
 
@@ -8,14 +8,14 @@ This is a WSL2 (Windows Subsystem for Linux) development environment setup repos
 
 ## Core Setup Scripts
 
-### Primary Installation Script: `src/run.sh`
+### Primary Installation Script: `scripts/install/run.sh`
 
 This is the main automated setup script that provisions a complete development environment.
 
 **Usage:**
 ```bash
-chmod +x src/run.sh
-./src/run.sh
+chmod +x scripts/install/run.sh
+./scripts/install/run.sh
 ```
 
 **What it installs:**
@@ -41,7 +41,7 @@ After running the script, the user needs to:
 - Log out and back in OR run `newgrp docker` to activate docker group membership
 - Run `docker login` manually if needed
 
-### Modular Installation Framework: `src/setup.sh`
+### Modular Installation Framework: `scripts/install/setup.sh`
 
 A refactored, function-based installer framework with separate functions for each package manager.
 
@@ -180,8 +180,8 @@ sudo!!
    ```bash
    git clone <this-repo>
    cd WSL2
-   chmod +x src/run.sh
-   ./src/run.sh
+   chmod +x scripts/install/run.sh
+   ./scripts/install/run.sh
    ```
 
 2. **Shell Configuration:**
@@ -195,7 +195,7 @@ sudo!!
 
 ## Modifying Installation Scripts
 
-When adding new tools to `src/run.sh`:
+When adding new tools to `scripts/install/run.sh`:
 
 1. Add to appropriate array (APT_PACKAGES, CURL_INSTALLERS, PIP_PACKAGES)
 2. For curl installers with dependencies, add to CURL_DEPENDENCIES array:
@@ -206,7 +206,7 @@ When adding new tools to `src/run.sh`:
    ```
 3. Format for CURL_INSTALLERS: `"command::install_script"`
 
-When using `src/setup.sh` functions:
+When using `scripts/install/setup.sh` functions:
 - Define arrays at the top
 - Call installer functions in main()
 - Use `install_bin()` for tools requiring custom install commands
@@ -231,7 +231,7 @@ This repository follows the **Meta-Proof workflow** inspired by NetworkChuck's A
 - `src/AI/HOW-TO-SUPERPOWER.md` — Meta-Proof workflow explanation
 
 **Context Synchronization:**
-- This file (`GEMINI.md`) is synchronized with `CLAUDE.md` and `AGENTS.md`
+- This file (`CLAUDE.md`) is synchronized with `AGENTS.md` and `GEMINI.md`
 - All three files contain identical content for cross-AI consistency
 - Updates to one should be mirrored to all others
 
@@ -256,7 +256,7 @@ This repository follows the **Meta-Proof workflow** inspired by NetworkChuck's A
 - Nested virtualization support documented (for Docker-in-VM scenarios)
 
 **Installation Script Status:**
-- `src/run.sh` — Fully functional and tested
+- `scripts/install/run.sh` — Fully functional and tested
 - Installs: shell configs, APT packages, nvm, pnpm, pyenv, Python 3.12.6, Docker, pip packages
 - All installations are idempotent and silent with clean logging
 

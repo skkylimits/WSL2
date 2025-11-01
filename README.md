@@ -14,6 +14,36 @@ This repository contains production-ready scripts for transforming a fresh WSL2 
 
 ---
 
+## Pre-requisites
+
+### Enable Virtualization
+Enable SVM mode (AMD) or VT-x (Intel) in your BIOS/UEFI settings.
+
+### Install WSL2
+```powershell
+# Run in PowerShell as Administrator
+wsl --install
+# OR install specific distribution
+wsl --install -d Ubuntu
+```
+
+**Learn more:** https://learn.microsoft.com/en-us/windows/wsl/install
+
+### Windows Terminal (Recommended)
+For the best experience, use Windows Terminal with custom configuration:
+https://github.com/skkylimits/WindowsTerminal
+
+### VS Code (Optional)
+Install VS Code on Windows with Remote-WSL extension for seamless WSL2 development:
+- **Automated:** Use the Windows automation script: https://github.com/skkylimits/Windows11
+- **Manual:** Download from https://code.visualstudio.com/
+- Install the "Remote - WSL" extension
+- Test with `code .` from WSL2
+
+**Learn more:** https://code.visualstudio.com/docs/remote/wsl
+
+---
+
 ## Quick Start
 
 ```bash
@@ -21,12 +51,8 @@ This repository contains production-ready scripts for transforming a fresh WSL2 
 git clone https://github.com/skkylimits/WSL2.git
 cd WSL2
 
-# Install pnpm dependencies and setup
-pnpm install
-pnpm run setup
-
 # Run the automated setup
-./src/run.sh
+./scripts/install/run.sh
 ```
 
 **Post-installation:**
@@ -149,10 +175,10 @@ pnpm run help          # List all available commands
 
 ## Architecture
 
-### Primary Script: `src/run.sh`
+### Primary Script: `scripts/install/run.sh`
 Complete automated installation pipeline for all tools and configurations.
 
-### Modular Framework: `src/setup.sh`
+### Modular Framework: `scripts/install/setup.sh`
 Function-based installer library for custom installation scripts.
 
 **Available Functions:**
@@ -337,7 +363,7 @@ Set-VMProcessor -VMName "YOUR-VM-NAME" -ExposeVirtualizationExtensions $true
 
 ## Customization
 
-### Adding Tools to `src/run.sh`
+### Adding Tools to `scripts/install/run.sh`
 
 **1. APT Packages:**
 ```bash
@@ -361,11 +387,11 @@ CURL_DEPENDENCIES=(
 )
 ```
 
-### Using `src/setup.sh` Functions
+### Using `scripts/install/setup.sh` Functions
 
 ```bash
 #!/bin/bash
-source src/setup.sh
+source scripts/install/setup.sh
 
 # Define packages
 APT_PACKAGES=(htop vim)
@@ -394,7 +420,7 @@ install_go "${GO_PACKAGES[@]}"
 
 ### pnpm
 - Installation auto-appends code to `.bashrc`
-- `run.sh` automatically removes these additions
+- `scripts/install/run.sh` automatically removes these additions
 
 ---
 

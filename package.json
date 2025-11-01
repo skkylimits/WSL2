@@ -5,16 +5,16 @@
   "private": true,
   "scripts": {
     "test": "pnpm run test:quick",
-    "test:quick": "./test-local.sh apt-packages quick",
-    "test:full": "./test-local.sh final",
-    "test:docker": "./test-local.sh",
-    "test:python": "./test-local.sh python-install",
-    "test:node": "./test-local.sh node-install",
+    "test:quick": "./tests/test-local.sh apt-packages quick",
+    "test:full": "./tests/test-local.sh final",
+    "test:docker": "./tests/test-local.sh",
+    "test:python": "./tests/test-local.sh python-install",
+    "test:node": "./tests/test-local.sh node-install",
 
     "act": "pnpm run act:quick",
-    "act:quick": "./test-with-act.sh quick",
-    "act:full": "./test-with-act.sh full",
-    "act:list": "./test-with-act.sh list",
+    "act:quick": "./tests/test-with-act.sh quick",
+    "act:full": "./tests/test-with-act.sh full",
+    "act:list": "./tests/test-with-act.sh list",
     "act:ci": "act -j test-setup",
 
     "build": "docker build --target final -t wsl2-setup:latest .",
@@ -25,7 +25,7 @@
     "run:mount": "docker run -it --rm -v $(pwd):/workspace wsl2-setup:latest bash",
 
     "lint": "pnpm run lint:shell",
-    "lint:shell": "shellcheck src/*.sh test-*.sh || echo 'Install shellcheck: sudo apt install shellcheck'",
+    "lint:shell": "shellcheck scripts/**/*.sh tests/*.sh || echo 'Install shellcheck: sudo apt install shellcheck'",
     "lint:fix": "echo 'Shell scripts need manual fixes after linting'",
     "lint:docker": "docker run --rm -i hadolint/hadolint < Dockerfile || echo 'Hadolint check complete'",
 
@@ -38,8 +38,8 @@
     "dev": "pnpm run test:quick",
     "dev:watch": "echo 'Use: watch -n 2 pnpm run test:quick' && watch -n 2 pnpm run test:quick",
 
-    "setup": "chmod +x src/run.sh src/setup.sh test-local.sh test-with-act.sh",
-    "setup:local": "./src/run.sh",
+    "setup": "chmod +x scripts/install/run.sh scripts/install/setup.sh scripts/wsl/*.sh tests/*.sh",
+    "setup:local": "./scripts/install/run.sh",
 
     "docker:logs": "docker ps -a && docker logs $(docker ps -lq)",
     "docker:stats": "docker system df",

@@ -22,7 +22,7 @@ jobs:
           path: |
             /var/cache/apt/archives/*.deb
             /var/lib/apt/lists/*
-          key: apt-cache-${{ runner.os }}-${{ hashFiles('src/run.sh', 'src/setup.sh') }}
+          key: apt-cache-${{ runner.os }}-${{ hashFiles('scripts/install/run.sh', 'scripts/install/setup.sh') }}
           restore-keys: |
             apt-cache-${{ runner.os }}-
 
@@ -62,8 +62,8 @@ jobs:
       # Run setup script
       - name: Run setup script
         run: |
-          chmod +x src/run.sh
-          ./src/run.sh
+          chmod +x scripts/install/run.sh
+          ./scripts/install/run.sh
         env:
           DEBIAN_FRONTEND: noninteractive
 
@@ -103,7 +103,7 @@ jobs:
           path: |
             /var/cache/apt/archives/*.deb
             /var/lib/apt/lists/*
-          key: apt-cache-${{ runner.os }}-${{ hashFiles('src/run.sh', 'src/setup.sh') }}
+          key: apt-cache-${{ runner.os }}-${{ hashFiles('scripts/install/run.sh', 'scripts/install/setup.sh') }}
           restore-keys: |
             apt-cache-${{ runner.os }}-
 

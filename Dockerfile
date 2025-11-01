@@ -114,6 +114,6 @@ FROM pnpm-install AS final
 WORKDIR /workspace
 
 # Copy scripts
-COPY src/ /workspace/src/
+COPY scripts/ /workspace/scripts/
 
 CMD ["/bin/bash"]
