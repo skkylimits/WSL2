@@ -167,6 +167,11 @@ fi
 # =============================================================
 PYTHON_LTS_VERSION="3.12.6"
 
+# Reload shell environment to get pyenv in PATH
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
 if pyenv versions --bare | grep -q "^${PYTHON_LTS_VERSION}$"; then
   echo "[#] Python ${PYTHON_LTS_VERSION} already installed."
 else
@@ -217,6 +222,10 @@ echo
 echo "============================================================="
 echo "[>] NODE LTS INSTALLATION"
 echo "============================================================="
+
+# Reload shell environment to get nvm in PATH
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
 if command -v nvm >/dev/null 2>&1; then
   # Check if Node LTS is already installed
