@@ -167,11 +167,6 @@ fi
 # =============================================================
 PYTHON_LTS_VERSION="3.12.6"
 
-# Reload shell environment to get pyenv in PATH
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-
 if pyenv versions --bare | grep -q "^${PYTHON_LTS_VERSION}$"; then
   echo "[#] Python ${PYTHON_LTS_VERSION} already installed."
 else
@@ -214,6 +209,64 @@ echo "[i]   pyenv global 3.12.6"
 echo "[i]   python --version"
 echo "[i]   which python"
 echo "-------------------------------------------------------------"
+
+# =============================================================
+#  NODE LTS INSTALLATION (via nvm)
+# =============================================================
+echo
+echo "============================================================="
+echo "[>] NODE LTS INSTALLATION"
+echo "============================================================="
+
+if command -v nvm >/dev/null 2>&1; then
+  # Check if Node LTS is already installed
+  if nvm ls lts/* >/dev/null 2>&1 && nvm ls | grep -q "lts"; then
+    echo "[#] Node LTS already installed."
+  else
+    echo "[i] Installing Node LTS via nvm..."
+    if nvm install --lts >/dev/null 2>&1; then
+      echo "[#] Node LTS installed successfully."
+    else
+      echo "[x] Failed to install Node LTS."
+    fi
+  fi
+
+  # Set LTS as default
+  echo "[i] Setting Node LTS as default..."
+  if nvm alias default 'lts/*' >/dev/null 2>&1; then
+    echo "[#] Node LTS set as default."
+  else
+    echo "[x] Failed to set default Node version."
+  fi
+
+  # Verify setup
+  echo "[i] Verifying Node installation..."
+  NODE_PATH=$(command -v node || echo "not found")
+  NODE_VER=$(node --version 2>/dev/null || echo "unknown")
+  NPM_VER=$(npm --version 2>/dev/null || echo "unknown")
+  echo "[#] Node binary : $NODE_PATH"
+  echo "[#] Node version: $NODE_VER"
+  echo "[#] npm version : $NPM_VER"
+
+  echo
+  echo "-------------------------------------------------------------"
+  echo "[i] Node version management tips:"
+  echo "-------------------------------------------------------------"
+  echo "[#] Use the following commands to switch Node versions:"
+  echo "[i]   nvm install <version>  → install specific version"
+  echo "[i]   nvm use <version>      → use version for current shell"
+  echo "[i]   nvm alias default <v>  → set version as default"
+  echo
+  echo "[#] Example:"
+  echo "[i]   nvm install --lts"
+  echo "[i]   nvm use --lts"
+  echo "[i]   node --version"
+  echo "[i]   which node"
+  echo "-------------------------------------------------------------"
+else
+  echo "[!] nvm not found, skipping Node LTS installation."
+  echo "[!] pnpm packages may fail without Node.js installed."
+fi
 
 # =============================================================
 #  PIP PACKAGE INSTALLATION
