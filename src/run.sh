@@ -397,6 +397,30 @@ else
   echo "[i] To apply immediately, run: newgrp docker"
 fi
 
+# =============================================================
+#  VS CODE CHECK
+# =============================================================
+echo
+echo "============================================================="
+echo "[>] VS CODE AVAILABILITY CHECK"
+echo "============================================================="
+
+if command -v code >/dev/null 2>&1; then
+  echo "[#] VS Code (code command) is available in WSL2."
+  CODE_VERSION=$(code --version 2>/dev/null | head -n1 || echo "unknown")
+  echo "[#] VS Code version: $CODE_VERSION"
+else
+  echo "[!] VS Code not found in WSL2."
+  echo "[!] VS Code must be installed on Windows with Remote-WSL extension."
+  echo
+  echo "[i] Install VS Code on Windows using the automated script:"
+  echo "[i] https://github.com/skkylimits/Windows11"
+  echo
+  echo "[i] Or manually download from: https://code.visualstudio.com/"
+  echo "[i] After installation, install the 'Remote - WSL' extension."
+  echo "[i] Then test with: code ."
+fi
+
 # -------------------------------------------------------------
 # Footer
 # -------------------------------------------------------------
